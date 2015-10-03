@@ -2,14 +2,14 @@
 
 namespace Robier\Holiday\DayType;
 
-use Robier\Holiday\Contract\DateCalculatorInterface;
+use Robier\Holiday\Contract\Calculable;
 use Robier\Holiday\HolidayData;
 
-class DependentDay implements DateCalculatorInterface
+class DependentDay implements Calculable
 {
 
     /**
-     * @var DateCalculatorInterface $date
+     * @var Calculable $date
      */
     protected $date;
 
@@ -19,10 +19,10 @@ class DependentDay implements DateCalculatorInterface
     protected $add;
 
     /**
-     * @param DateCalculatorInterface $date
+     * @param Calculable $date
      * @param int $add
      */
-    public function __construct(DateCalculatorInterface $date, $add)
+    public function __construct(Calculable $date, $add)
     {
         $this->date = $date;
 

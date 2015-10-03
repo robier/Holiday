@@ -8,7 +8,7 @@ use DateTime;
 use Robier\Holiday\Collection\DayCollection;
 use Robier\Holiday\Collection\HolidayCollection;
 use Robier\Holiday\Collection\NameCollection;
-use Robier\Holiday\Contract\DateCalculatorInterface;
+use Robier\Holiday\Contract\Calculable;
 use Robier\Holiday\DayType\DependentDay;
 use Robier\Holiday\DayType\FixedDay;
 use Robier\Holiday\DayType\FloatingDay;
@@ -78,10 +78,10 @@ class Holidays
 
     /**
      * @param string $name
-     * @param DateCalculatorInterface $date
+     * @param Calculable $date
      * @return $this
      */
-    public function register($name, DateCalculatorInterface $date)
+    public function register($name, Calculable $date)
     {
         if ($this->holidays->exists($name)) {
             throw new \InvalidArgumentException('Holiday with name ' . $name . ' already exists!');
@@ -108,7 +108,7 @@ class Holidays
         foreach (func_get_args() as $year) {
             /**
              * @var string $name
-             * @var DateCalculatorInterface $day
+             * @var Calculable $day
              * @var HolidayData $holidayData
              */
             foreach ($this->holidays as $name => $day) {
@@ -123,12 +123,12 @@ class Holidays
     /**
      * Calculates one day for provided year
      *
-     * @param DateCalculatorInterface $date
+     * @param Calculable $date
      * @param string $name
      * @param int $year
      * @return $this
      */
-    protected function calculateDay(DateCalculatorInterface $date, $name, $year)
+    protected function calculateDay(Calculable $date, $name, $year)
     {
         $holidayData = $date->getDateFor($year);
         $holidayData->setName($name);

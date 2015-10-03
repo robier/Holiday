@@ -2,10 +2,10 @@
 
 namespace Robier\Holiday\DayType;
 
-use Robier\Holiday\Contract\DateCalculatorInterface;
+use Robier\Holiday\Contract\Calculable;
 use Robier\Holiday\HolidayData;
 
-class FixedDay implements DateCalculatorInterface
+class FixedDay implements Calculable
 {
 
     protected $day;

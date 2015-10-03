@@ -1,6 +1,6 @@
 <?php
 
-use Robier\Holiday\Contract\DateCalculatorInterface;
+use Robier\Holiday\Contract\Calculable;
 use Robier\Holiday\Holidays;
 
 class HolidaysTest extends PHPUnit_Framework_TestCase
@@ -104,11 +104,11 @@ class HolidaysTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param $name
-     * @param DateCalculatorInterface $holiday
+     * @param Calculable $holiday
      *
      * @dataProvider predefinedDateDataProvider
      */
-    public function testPredefinedHoliday($name, DateCalculatorInterface $holiday)
+    public function testPredefinedHoliday($name, Calculable $holiday)
     {
         $holidays = new Holidays();
         $holidays->register($name, $holiday);

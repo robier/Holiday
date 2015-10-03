@@ -2,13 +2,13 @@
 
 namespace Robier\Holiday\DayType;
 
-use Robier\Holiday\Contract\DateCalculatorInterface;
+use Robier\Holiday\Contract\Calculable;
 use Robier\Holiday\HolidayData;
 
 /**
  * Class FloatingDay
  */
-class FloatingDay implements DateCalculatorInterface
+class FloatingDay implements Calculable
 {
     protected $string;
 

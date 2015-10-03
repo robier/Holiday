@@ -4,7 +4,7 @@ namespace Robier\Holiday\Contract;
 
 use Robier\Holiday\HolidayData;
 
-interface DateCalculatorInterface
+interface Calculable
 {
 
     /**
