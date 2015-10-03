@@ -36,13 +36,11 @@ class DependentDay implements Calculable
 
     public function getDateFor($year)
     {
-        $string = sprintf('%s %s days', $this->date->getDateFor($year), $this->add);
+        $shift = sprintf('%s days', $this->add);
 
-        $time = strtotime($string);
+        $dateTime = $this->date->getDateFor($year)->toDateTimeObject();
+        $dateTime->modify($shift);
 
-        $day = date('d', $time);
-        $month = date('m', $time);
-
-        return new HolidayData($day, $month, $year);
+        return new HolidayData($dateTime->format('d'), $dateTime->format('m'), $dateTime->format('Y'));
     }
 }

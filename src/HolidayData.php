@@ -69,30 +69,41 @@ class HolidayData
     }
 
     /**
-     * @param $date
+     * Creates HolidayData from string
+     *
+     * @param string $date
+     * @param string $format
      * @return $this
      */
-    public static function fromString($date)
+    public static function fromString($date, $format = 'Y-m-d')
     {
-        $date = explode('-', (string)$date);
-        return new static($date[2], $date[1], $date[0]);
+        $dateTime = DateTime::createFromFormat($format, $date);
+        return new static($dateTime->format('d'), $dateTime->format('m'), $dateTime->format('Y'));
     }
 
     /**
-     * @return \DateTime
+     * Returns DateTime representation of HolidayData object
+     *
+     * @return DateTime
      */
     public function toDateTimeObject()
     {
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
         return $dateTime->setDate($this->getYear(), $this->getMonth(), $this->getDay());
     }
 
     /**
+     * Returns string representation of HolidayData object
+     *
+     * @param string $format
      * @return string
      */
-    public function toString()
+    public function toString($format = 'Y-m-d')
     {
-        return sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
+        $dateTime = new DateTime();
+        $dateTime->setDate($this->year, $this->month, $this->day);
+
+        return $dateTime->format($format);
     }
 
 }
