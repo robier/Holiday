@@ -29,6 +29,9 @@ var_dump($holidays->getHolidayOn(1, 1, 2030));
 // true if there is any holidays in that period, false otherwise
 var_dump($holidays->areAnyHolidaysBetween('2018-07-04', '2018-09-15'));
 
+// gets array of holidays for range
+var_dump($holidays->getHolidaysBetween('2018-07-04', '2018-09-15'));
+
 // array of all holidays
 var_dump($holidays->getAllHolidaysFor(2015));
 ```
