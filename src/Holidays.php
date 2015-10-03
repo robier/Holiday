@@ -13,6 +13,13 @@ use Robier\Holiday\DayType\DependentDay;
 use Robier\Holiday\DayType\FixedDay;
 use Robier\Holiday\DayType\FloatingDay;
 
+/**
+ * Class Holidays
+ *
+ * Main class that are responsible to register holidays and handle them.
+ *
+ * @package Robier\Holiday
+ */
 class Holidays
 {
     /**
@@ -41,6 +48,8 @@ class Holidays
     }
 
     /**
+     * Register fixed holiday providing day and month
+     *
      * @param string $name
      * @param string $day
      * @param string $month
@@ -52,6 +61,8 @@ class Holidays
     }
 
     /**
+     * Register floating holiday providing string like "first Monday of September"
+     *
      * @param string $name
      * @param string $string
      * @return $this
@@ -62,6 +73,9 @@ class Holidays
     }
 
     /**
+     * Register dependant holiday by providing concrete holiday and how many days this holiday is after
+     * (positive number) or before (negative number) concrete holiday
+     *
      * @param string $name
      * @param string $concreteName
      * @param int $add
@@ -77,6 +91,8 @@ class Holidays
     }
 
     /**
+     * Registers calculator object into system
+     *
      * @param string $name
      * @param Calculable $date
      * @return $this
@@ -131,6 +147,8 @@ class Holidays
     protected function calculateDay(Calculable $date, $name, $year)
     {
         $holidayData = $date->getDateFor($year);
+
+        // set holiday name
         $holidayData->setName($name);
 
         // add holiday to days collection so we can easier get that holiday by date
@@ -169,6 +187,20 @@ class Holidays
 
         return $this->days->exists($year, $month, $day);
     }
+
+    /**
+     * Returns HolidayData if there is any registered holiday on given date, null otherwise.
+     * Parameters you can send for example:
+     * - getHolidayOn(21, 6, 2015);                 -> all data provided
+     * - getHolidayOn(21, 6);                       -> current year will be used if day and month are numbers
+     * - getHolidayOn('2015-06-21', 'Y-m-d');       -> date and date format
+     * - getHolidayOn(new DateTime('2015-06-21'));  -> DateTime as first argument
+     *
+     * @param string|int|DateTime $day
+     * @param null|int $month
+     * @param null|int $year
+     * @return HolidayData|null
+     */
     public function getHolidayOn($day, $month = null, $year = null)
     {
         list($day, $month, $year) = $this->getDateFromArguments($day, $month, $year);
@@ -184,6 +216,18 @@ class Holidays
         return $this->days->get($year, $month, $day);
     }
 
+    /**
+     * Calculates given arguments to day, month and year. Possible arguments for this function are:
+     * - getDateFromArguments(new DateTime('2015-05-15'))   -> only DateTime object provided
+     * - getDateFromArguments('2015-05-15', 'Y-m-d')        -> date and format
+     * - getDateFromArguments(15, 5)                        -> current year will be used in this case
+     * - getDateFromArguments(15, 5, 2015)                  -> all data provided
+     *
+     * @param int|string|DateTime $day
+     * @param null|int $month
+     * @param null|int $year
+     * @return array
+     */
     protected function getDateFromArguments($day, $month = null, $year = null)
     {
         if ($day instanceof DateTime) {

@@ -137,8 +137,10 @@ class HolidaysTest extends PHPUnit_Framework_TestCase
     {
         return
             [
+                // dependant days in the future
                 ['test1', 1, new Holidays\Christmas()],
                 ['test2', 2, new Holidays\Christmas()],
+                // dependant days in the past
                 ['test3', -3, new Holidays\Christmas()],
                 ['test4', -5, new Holidays\Christmas()],
             ];
@@ -228,8 +230,6 @@ class HolidaysTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount(5, $holidays->getHolidaysBetween('2015-12-31', '2020-01-02'));
     }
-
-
 
     public function testNotExistingHoliday()
     {

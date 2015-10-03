@@ -28,6 +28,8 @@ class DependentDay implements Calculable
 
         $add = (string)$add;
 
+        // if number is positive we only append + sign, negative
+        // number will already have negative sign
         if ($add > 0) {
             $add = '+' . $add;
         }

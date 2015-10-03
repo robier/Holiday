@@ -2,6 +2,15 @@
 
 namespace Robier\Holiday;
 
+use DateTime;
+
+/**
+ * Class HolidayData
+ *
+ * Simple value object for holding holiday related data as day, month, year and holiday name.
+ *
+ * @package Robier\Holiday
+ */
 class HolidayData
 {
 
@@ -11,6 +20,11 @@ class HolidayData
 
     protected $name;
 
+    /**
+     * @param int $day
+     * @param int $month
+     * @param int $year
+     */
     public function __construct($day, $month, $year)
     {
         $this->day = (int)$day;
@@ -19,6 +33,8 @@ class HolidayData
     }
 
     /**
+     * Sets holiday name
+     *
      * @param string $name
      * @return $this
      */
@@ -29,6 +45,8 @@ class HolidayData
     }
 
     /**
+     * Returns holiday name
+     *
      * @return string
      */
     public function getName()
@@ -37,6 +55,8 @@ class HolidayData
     }
 
     /**
+     * Returns day
+     *
      * @return int
      */
     public function getDay()
@@ -45,6 +65,8 @@ class HolidayData
     }
 
     /**
+     * Returns month
+     *
      * @return int
      */
     public function getMonth()
@@ -53,6 +75,8 @@ class HolidayData
     }
 
     /**
+     * Returns year
+     *
      * @return int
      */
     public function getYear()
@@ -61,6 +85,8 @@ class HolidayData
     }
 
     /**
+     * Returns string representation of HolidayData in ISO 8601 standard (Y-m-d)
+     *
      * @return string
      */
     public function __toString()
