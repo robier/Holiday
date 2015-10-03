@@ -63,17 +63,17 @@ class Holidays
 
     /**
      * @param string $name
-     * @param string $concrete
+     * @param string $concreteName
      * @param int $add
      * @return $this
      */
-    public function registerDependent($name, $concrete, $add)
+    public function registerDependent($name, $concreteName, $add)
     {
-        if (!$this->holidays->exists($concrete)) {
-            throw new \InvalidArgumentException('There is no defined holiday with name ' . $concrete);
+        if (!$this->holidays->exists($concreteName)) {
+            throw new \InvalidArgumentException('There is no defined holiday with name ' . $concreteName);
         }
 
-        return $this->register($name, new DependentDay($this->holidays->get($concrete), $add));
+        return $this->register($name, new DependentDay($this->holidays->get($concreteName), $add));
     }
 
     /**
@@ -143,10 +143,12 @@ class Holidays
     }
 
     /**
+     * Checks if there is any registered holiday on given date.
      * Parameters you can send:
-     * - isHolidayOn(21, 6, 2015);
-     * - isHolidayOn('2015-06-21');
-     * - isHolidayOn(new DateTime('2015-06-21'));
+     * - isHolidayOn(21, 6, 2015);                  -> all data provided
+     * - isHolidayOn(21, 6);                        -> current year will be used if day and month are numbers
+     * - isHolidayOn('2015-06-21', 'Y-m-d');        -> date and date format
+     * - isHolidayOn(new DateTime('2015-06-21'));   -> DateTime as first argument
      *
      * @param string|int|DateTime $day
      * @param null|int $month
@@ -155,25 +157,7 @@ class Holidays
      */
     public function isHolidayOn($day, $month = null, $year = null)
     {
-        if ($day instanceof DateTime) {
-            $year = $day->format('Y');
-            $month = $day->format('m');
-            $day = $day->format('d');
-        }
-
-        if (null === $month && null === $year) {
-            $data = explode('-', (string)$day);
-            $year = $data[0];
-            $month = $data[1];
-            $day = $data[2];
-
-        } elseif (null === $year) {
-            $year = date('Y');
-        }
-
-        $day = (int)$day;
-        $month = (int)$month;
-        $year = (int)$year;
+        list($day, $month, $year) = $this->getDateFromArguments($day, $month, $year);
 
         if ($this->days->exists($year) && !$this->days->exists($year, $month)) {
             return false;
@@ -185,28 +169,9 @@ class Holidays
 
         return $this->days->exists($year, $month, $day);
     }
-
     public function getHolidayOn($day, $month = null, $year = null)
     {
-        if ($day instanceof DateTime) {
-            $year = $day->format('Y');
-            $month = $day->format('m');
-            $day = $day->format('d');
-        }
-
-        if (null === $month && null === $year) {
-            $data = explode('-', (string)$day);
-            $year = $data[0];
-            $month = $data[1];
-            $day = $data[2];
-
-        } elseif (null === $year) {
-            $year = date('Y');
-        }
-
-        $day = (int)$day;
-        $month = (int)$month;
-        $year = (int)$year;
+        list($day, $month, $year) = $this->getDateFromArguments($day, $month, $year);
 
         if ($this->days->exists($year) && !$this->days->exists($year, $month)) {
             return null;
@@ -219,24 +184,54 @@ class Holidays
         return $this->days->get($year, $month, $day);
     }
 
+    protected function getDateFromArguments($day, $month = null, $year = null)
+    {
+        if ($day instanceof DateTime) {
+            $year = $day->format('Y');
+            $month = $day->format('m');
+            $day = $day->format('d');
+        }
+
+        if (null === $year) {
+            if (is_string($day) && is_string($month)) {
+                $dateTimeObject = DateTime::createFromFormat($month, $day);
+                $year = $dateTimeObject->format('Y');
+                $month = $dateTimeObject->format('m');
+                $day = $dateTimeObject->format('d');
+            } else {
+                $year = date('Y');
+            }
+        }
+
+        $day = (int)$day;
+        $month = (int)$month;
+        $year = (int)$year;
+
+        return [$day, $month, $year];
+    }
+
     /**
      * Calculates dates between 2 dates
      *
      * @param string|DateTime $start
      * @param string|DateTime $end
+     * @param string $format
      * @return array
      */
-    protected function getDatesBetween($start, $end)
+    protected function getDatesBetween($start, $end, $format)
     {
+        $format = (string)$format;
+
         if (!$start instanceof DateTime) {
-            $start = new DateTime((string)$start);
+            $start = DateTime::createFromFormat($format, (string)$start);
         }
 
         if (!$end instanceof DateTime) {
-            $end = new DateTime((string)$end);
+            $end = DateTime::createFromFormat($format, (string)$end);
         }
 
         // DatePeriod do not work if we provide start date greater than end date
+        // so this is workaround
         if ($start->getTimestamp() > $end->getTimestamp()) {
             $tempStart = $start;
             $start = $end;
@@ -258,15 +253,16 @@ class Holidays
     }
 
     /**
-     * Check if there is any holiday registered between $startDate and $endDate
+     * Check if there is any holiday registered between $startDate and $endDate, also you can provide date format
      *
      * @param string|DateTime $startDate
      * @param string|DateTime $endDate
+     * @param string $format
      * @return bool
      */
-    public function areAnyHolidaysBetween($startDate, $endDate)
+    public function areAnyHolidaysBetween($startDate, $endDate, $format = 'Y-m-d')
     {
-        foreach ($this->getDatesBetween($startDate, $endDate) as list($day, $month, $year)) {
+        foreach ($this->getDatesBetween($startDate, $endDate, $format) as list($day, $month, $year)) {
             if (!$this->days->exists($year)) {
                 $this->calculate($year);
             }
@@ -279,17 +275,18 @@ class Holidays
     }
 
     /**
-     * Gets all holidays that is between two dates
+     * Gets all holidays that is between two dates, also you can provide date format
      *
      * @param string|DateTime $startDate
      * @param string|DateTime $endDate
+     * @param string $format
      * @return array|\Robier\Holiday\HolidayData[]
      */
-    public function getHolidaysBetween($startDate, $endDate)
+    public function getHolidaysBetween($startDate, $endDate, $format = 'Y-m-d')
     {
         $holidays = [];
 
-        foreach ($this->getDatesBetween($startDate, $endDate) as list($day, $month, $year)) {
+        foreach ($this->getDatesBetween($startDate, $endDate, $format) as list($day, $month, $year)) {
             if (!$this->days->exists($year)) {
                 $this->calculate($year);
             }
