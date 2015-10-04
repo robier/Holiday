@@ -1,5 +1,3 @@
 # ignore PHPStorm files
 .idea/
 
-# ignore beckup files from unix editors
-touch test
