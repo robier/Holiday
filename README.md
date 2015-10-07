@@ -6,7 +6,7 @@ fixed dates, floating dates or dates that depends of some other holiday. This li
 was developed in need for holiday calculation that is not fixed to specific country as
 almost any other library out there is.
 
-Note that library do not support holidays that last more than 1 day.
+Note that library does not support holidays lasting more than 1 day.
 
 And it's easy to use:
 
@@ -47,19 +47,19 @@ Features
     - `floating` where a holiday's date is not fixed (like easter)
     - `dependant` where one holiday depends upon some other holiday (it's `x` days before 
     or after "main" holiday)
-- you can check if holiday exist providing date
+- you can check if holiday exists providing date
 - also you can get holiday by providing date
-- you can check if there is any holidays in date range
-- also you can get holiday by providing date range
-- you can get all dates for specified year
-- you can make you own holiday class definitions by just implementing `DateCalculatorInterface`
-(it can not be dependant date type)
+- you can check if there are any holidays in date range
+- also you can get holidays by providing date range
+- you can get all holidays for specified year
+- you can make you own holiday class definitions by just implementing `Calculable` interface
+(it can not be dependant holiday type)
 
 Installation
 ------------
 
-This project requires PHP 5.5 or. higher.
-Installation of this project is simple you just need to add one line to your `composer.json` file
+This project requires PHP 5.5 or higher.
+Installation of this library is simple, you just need to add one line to your `composer.json` file
 
     {
         "require": {
@@ -81,9 +81,9 @@ Todo
 
 - [ ] add support for holidays that last more than 1 day
 - [ ] add more default holidays
-- [ ] add more test coverage
+- [ ] increase test coverage
 
 Licence
 -------
 
-This project is developed under MIT licence.
+This library is developed under MIT licence.
