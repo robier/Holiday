@@ -59,17 +59,10 @@ Installation
 ------------
 
 This project requires PHP 5.5 or higher.
-Installation of this library is simple, you just need to add one line to your `composer.json` file
+Installation of this library is simple via composer, just run command
 
-    {
-        "require": {
-            "robier/holiday": "*"
-        }
-    }
+    composer require robier/holiday
 
-and run command
-
-    composer update
 
 Contribute
 ----------
